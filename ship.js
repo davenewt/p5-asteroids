@@ -1,12 +1,17 @@
 function Ship() {
-  this.pos = createVector(width / 2, height / 2);
   this.r = 20;
+  this.pos = createVector(width / 2, height / 2);
   this.heading = 0;
+  this.targetHeading = 0;
   this.vel = createVector(0, 0);
   this.maxSpeed = 10;
 
   this.update = function() {
-    // console.log(keyCode);
+
+    if (this.heading != this.targetHeading) {
+      this.heading = lerp(this.heading, this.targetHeading, 0.1);
+    }
+
     if (keyIsDown(39)) { // right arrow
       ship.turn(0.1);
     } else if (keyIsDown(37)) { // left arrow
@@ -40,7 +45,6 @@ function Ship() {
     let force = p5.Vector.fromAngle(this.heading).setMag(0.2);
     this.vel.add(force);
     this.vel.limit(this.maxSpeed);
-
     // Draw thrusters
     colorMode(RGB, 255, 255, 255, 1);
     noStroke();
@@ -60,7 +64,7 @@ function Ship() {
     stroke(255);
     triangle(-this.r, this.r, this.r, this.r, 0, -this.r);
     pop();
-  // draw tip of ship for visual reference
+  // Draw tip of ship for visual reference
   // push();
   // translate(0, -this.r + this.r / 5);
   // fill(255);
@@ -69,6 +73,16 @@ function Ship() {
   }
 
   this.turn = function(angle) {
-    this.heading += angle;
+    this.targetHeading += angle;
   }
+
+  this.hits = function(asteroid) {
+    let d = dist(this.pos.x, this.pos.y, asteroid.pos.x, asteroid.pos.y);
+    if (d < this.r + asteroid.r) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
 }

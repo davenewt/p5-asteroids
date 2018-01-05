@@ -7,7 +7,7 @@ function Asteroid(pos, r) {
   if (r) {
     this.r = r / 2;
   } else {
-    this.r = random(10, 60);
+    this.r = random(10, asteroidMaxSize);
   }
   this.vel = p5.Vector.random2D();
   this.vertices = random(8, 12);
