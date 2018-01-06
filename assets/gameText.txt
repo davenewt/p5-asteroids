@@ -1,4 +1,4 @@
 ASTEROIDS!
->> Press any key to play <<
+>> Press any key to play (P to pause) <<
 GAME OVER
 >> Press R to restart <<

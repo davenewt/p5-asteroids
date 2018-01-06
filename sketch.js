@@ -93,12 +93,20 @@ function draw() {
 
 function keyPressed() {
   // console.log(keyCode);
+
   if (gameOver) {
     if (keyCode == 82) // 'r' to restart
       resetGame();
-  } else if (!gameRunning) {
+  }
+
+  if (gameRunning && keyCode == 80) { // 'p' to pause
+    gameRunning = false;
+  } else if (!gameRunning) { // any key to start
     gameRunning = true;
-  } else if (keyCode == 32) {
+  }
+
+
+  if (keyCode == 32) {
     lasers.push(new Laser(ship.pos, ship.heading));
     if (!gameOver) {
       shotsFired++;
