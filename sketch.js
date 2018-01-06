@@ -24,6 +24,7 @@ function setup() {
 }
 
 function resetGame() {
+  asteroids = [];
   for (let i = 0; i < 10; i++) {
     asteroids.push(new Asteroid());
   }
