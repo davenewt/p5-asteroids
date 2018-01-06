@@ -9,24 +9,33 @@ let gameRunning;
 let shotsFired;
 let asteroidsHit;
 
+function preload() {
+  boldFont = loadFont('fonts/pixelmix/pixelmix_bold.ttf');
+  normalFont = loadFont('fonts/pixelmix/pixelmix.ttf');
+  gameText = loadStrings('assets/gameText.txt');
+}
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
   asteroidMaxSize = 60;
-  for (let i = 0; i < 10; i++) {
+  scorePos = createVector(10, 30);
+  ship = new Ship();
+  resetGame();
+}
+
+function resetGame() {
+  for (let i = 0; i < 1; i++) {
     asteroids.push(new Asteroid());
   }
-  ship = new Ship();
   score = 0;
   shotsFired = 0;
   asteroidsHit = 0;
   gameOver = false;
   gameRunning = false;
-  scorePos = createVector(10, 30);
 }
 
 function draw() {
   background(0);
-  showScore();
 
   for (let i = lasers.length - 1; i >= 0; i--) {
     if (lasers[i].pos.x < 0 || lasers[i].pos.x > width || lasers[i].pos.y < 0 || lasers[i].pos.y > height) {
@@ -57,29 +66,38 @@ function draw() {
     }
   }
 
-  for (let j = asteroids.length - 1; j >= 0; j--) {
-    if (ship.hits(asteroids[j])) {
-      gameOver = true;
-    }
-    asteroids[j].render();
-    if (gameRunning) {
-      asteroids[j].update()
+  if (asteroids.length == 0) {
+    gameOver = true;
+  } else {
+    for (let j = asteroids.length - 1; j >= 0; j--) {
+      if (ship.hits(asteroids[j])) {
+        gameOver = true;
+      }
+      asteroids[j].render();
+      if (gameRunning) {
+        asteroids[j].update()
+      }
     }
   }
 
-  ship.render(); // render the ship first, because updating could draw the thrusters etc.
+  ship.render();
   if (gameRunning) {
-    ship.update()
+    ship.update();
   }
+
+  showScore();
+  showText();
 
 }
 
 function keyPressed() {
-  if (!gameRunning) {
+  // console.log(keyCode);
+  if (gameOver) {
+    if (keyCode == 82) // 'r' to restart
+      resetGame();
+  } else if (!gameRunning) {
     gameRunning = true;
-  }
-  if (keyCode == 32) { // spacebar = fire laser
-    // console.log("Pew!");
+  } else if (keyCode == 32) {
     lasers.push(new Laser(ship.pos, ship.heading));
     if (!gameOver) {
       shotsFired++;
@@ -89,26 +107,56 @@ function keyPressed() {
 
 function showScore() {
   if (shotsFired == 0 || asteroidsHit == 0) {
-    scoreText = "Score: " + score + "  Asteroids: " + asteroids.length;
+    scoreText = "Score " + score;
   } else {
     let acc = floor((100 / shotsFired) * asteroidsHit);
-    scoreText = "Score: " + score + "  Asteroids: " + asteroids.length + "  Accuracy: " + acc + "%  (" + asteroidsHit + "/" + shotsFired + ")";
+    scoreText = "Score " + score + "  Accuracy " + acc + "%";
   }
   push();
   translate(0, 0);
   noStroke();
   if (gameOver) {
-    scoreText = scoreText + "  GAME OVER!";
-    fill(255, 0, 0, 0.5);
+    scoreText += "  GAME OVER!";
+    if (asteroids.length == 0) {
+      // Game over because player has destroyed all asteroids!
+      scoreText += "  YOU WON!";
+      fill(0, 100, 0);
+    } else {
+      // Game over because player died!
+      fill(100, 0, 0);
+    }
   } else {
-    fill(255, 255, 255, 0.2);
+    fill(20, 20, 20);
   }
   rect(5, 5, width - scorePos.x, scorePos.y + 5);
-  stroke(255, 255, 255, 0.2);
-  strokeWeight(2);
-  line(scorePos.x, scorePos.y + 5, width - scorePos.x, scorePos.y + 5);
-  fill(255, 255, 255, 0.5);
-  textSize(18);
+  //
+  // stroke(255, 255, 255, 0.2);
+  // strokeWeight(2);
+  // line(scorePos.x, scorePos.y + 5, width - scorePos.x, scorePos.y + 5);
+  //
+  fill(200, 200, 200);
+  textFont(normalFont);
+  textSize(12);
   text(scoreText, scorePos.x, scorePos.y);
+  pop();
+// console.log("Score shown");
+}
+
+function showText() {
+  push();
+  translate(0, 0);
+  fill(0, 255, 0);
+  noStroke();
+  textFont(boldFont);
+  textAlign(CENTER);
+  textSize(24);
+  let lineSpacing = 40;
+  if (!gameRunning && !gameOver) {
+    text(gameText[0], width / 2, height / 2);
+    text(gameText[1], width / 2, height / 2 + lineSpacing);
+  } else if (gameOver && asteroids.length == 0) {
+    text(gameText[2], width / 2, height / 2);
+    text(gameText[3], width / 2, height / 2 + lineSpacing);
+  }
   pop();
 }

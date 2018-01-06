@@ -1,13 +1,12 @@
 function Ship() {
   this.r = 20;
-  this.pos = createVector(width / 2, height / 2);
+  this.pos = createVector(width / 2, height / 3);
   this.heading = 0;
   this.targetHeading = 0;
   this.vel = createVector(0, 0);
   this.maxSpeed = 10;
 
   this.update = function() {
-
     if (this.heading != this.targetHeading) {
       this.heading = lerp(this.heading, this.targetHeading, 0.1);
     }
@@ -23,6 +22,7 @@ function Ship() {
 
     // Add any velocity to the ship's position
     this.pos.add(this.vel);
+
     // Each time through update, dampen the velocity a little, slow gradually if no boost being added
     this.vel.mult(0.99);
 
@@ -46,13 +46,13 @@ function Ship() {
     this.vel.add(force);
     this.vel.limit(this.maxSpeed);
     // Draw thrusters
+    push();
     colorMode(RGB, 255, 255, 255, 1);
     noStroke();
-    push();
     translate(this.pos.x, this.pos.y);
     rotate(this.heading + PI / 2);
-    fill(255, 0, 0, random(0.4, 0.8));
-    triangle(-this.r / 5, this.r * 2, this.r / 5, this.r * 2, 0, this.r);
+    fill(255, 0, 0, random(0.2, 1));
+    triangle(-this.r / 3, this.r * 2, this.r / 3, this.r * 2, 0, this.r);
     pop();
   }
 
@@ -60,20 +60,27 @@ function Ship() {
     push();
     translate(this.pos.x, this.pos.y);
     rotate(this.heading + PI / 2);
-    fill(0);
-    stroke(255);
+    fill(200);
+    noStroke();
     triangle(-this.r, this.r, this.r, this.r, 0, -this.r);
     pop();
-  // Draw tip of ship for visual reference
-  // push();
-  // translate(0, -this.r + this.r / 5);
-  // fill(255);
-  // triangle(-this.r / 5, this.r / 5, this.r / 5, this.r / 5, 0, -this.r / 5);
-  // pop();
   }
 
   this.turn = function(angle) {
     this.targetHeading += angle;
+    // Draw thrusters
+    push();
+    colorMode(RGB, 255, 255, 255, 1);
+    noStroke();
+    translate(this.pos.x, this.pos.y);
+    rotate(this.heading + PI / 2);
+    fill(255, 0, 0, random(0.2, 1));
+    if (angle > 0) {
+      triangle(-this.r / 5 - (this.r / 2), this.r * 1.5, this.r / 5 - (this.r / 2), this.r * 1.5, 0 - (this.r / 2), this.r);
+    } else {
+      triangle(-this.r / 5 + (this.r / 2), this.r * 1.5, this.r / 5 + (this.r / 2), this.r * 1.5, 0 + (this.r / 2), this.r);
+    }
+    pop();
   }
 
   this.hits = function(asteroid) {

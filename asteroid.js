@@ -1,16 +1,23 @@
-function Asteroid(pos, r) {
+function Asteroid(pos, r, vel) {
   if (pos) {
     this.pos = pos.copy();
   } else {
-    this.pos = createVector(random(width), random(height));
+    this.pos = createVector(random(-width, 0), random(-height, 0));
   }
   if (r) {
     this.r = r / 2;
   } else {
     this.r = random(10, asteroidMaxSize);
   }
-  // Smaller asteroids will move faster
-  this.vel = p5.Vector.random2D().mult(map(this.r, 0, asteroidMaxSize, 1.5, 0.5));
+  if (vel) {
+    // If vel is passed in, generate new vel which is similar
+    // so large asteroids that break into smaller ones result in
+    // the smaller ones going in a similar direction.
+    this.vel = vel;
+  } else {
+    // Smaller asteroids will move faster
+    this.vel = p5.Vector.random2D().mult(map(this.r, 0, asteroidMaxSize, 1.5, 0.5));
+  }
   // Some small asteroids will move even faster
   if (this.r < asteroidMaxSize / 4 && random(1) > 0.95) {
     this.vel = this.vel.mult(2);
@@ -32,8 +39,10 @@ function Asteroid(pos, r) {
 
   this.render = function() {
     push();
-    stroke(255);
-    noFill();
+    // stroke(255);
+    // noFill();
+    noStroke();
+    fill(80);
     translate(this.pos.x, this.pos.y);
     rotate(this.angle);
     // ellipse(0, 0, this.r * 2, this.r * 2);
