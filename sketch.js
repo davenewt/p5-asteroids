@@ -24,7 +24,7 @@ function setup() {
 }
 
 function resetGame() {
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < 10; i++) {
     asteroids.push(new Asteroid());
   }
   score = 0;
@@ -154,7 +154,7 @@ function showText() {
   if (!gameRunning && !gameOver) {
     text(gameText[0], width / 2, height / 2);
     text(gameText[1], width / 2, height / 2 + lineSpacing);
-  } else if (gameOver && asteroids.length == 0) {
+  } else if (gameOver) {
     text(gameText[2], width / 2, height / 2);
     text(gameText[3], width / 2, height / 2 + lineSpacing);
   }
