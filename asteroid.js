@@ -9,19 +9,33 @@ function Asteroid(pos, r) {
   } else {
     this.r = random(10, asteroidMaxSize);
   }
-  this.vel = p5.Vector.random2D();
+  // Smaller asteroids will move faster
+  this.vel = p5.Vector.random2D().mult(map(this.r, 0, asteroidMaxSize, 1.5, 0.5));
+  // Some small asteroids will move even faster
+  if (this.r < asteroidMaxSize / 4 && random(1) > 0.95) {
+    this.vel = this.vel.mult(2);
+  }
+  // make sure we don't have any REALLY SLOW asteroids
+  if (this.vel < 0.5) {
+    this.vel = 0.5;
+  }
   this.vertices = random(8, 12);
   this.offset = [];
   for (let i = 0; i < this.vertices; i++) {
     this.offset[i] = random(this.r / 2);
   }
-
+  this.angle = 0;
+  this.rotationSpeed = random(-0.01, 0.01);
+  if ((abs(this.rotationSpeed) > 0.008) && (this.r < asteroidMaxSize / 2)) {
+    this.rotationSpeed = this.rotationSpeed * 10; // some (small) asteroids will spin fast!
+  }
 
   this.render = function() {
     push();
     stroke(255);
     noFill();
     translate(this.pos.x, this.pos.y);
+    rotate(this.angle);
     // ellipse(0, 0, this.r * 2, this.r * 2);
     beginShape();
     for (let i = 0; i < this.vertices; i++) {
@@ -50,6 +64,7 @@ function Asteroid(pos, r) {
     if (this.pos.y > height + this.r) {
       this.pos.y = -this.r;
     }
+    this.angle += this.rotationSpeed;
   }
 
   this.breakup = function() {

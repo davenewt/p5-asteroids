@@ -89,7 +89,6 @@ function keyPressed() {
 
 function showScore() {
   if (shotsFired == 0 || asteroidsHit == 0) {
-    let acc = 0;
     scoreText = "Score: " + score + "  Asteroids: " + asteroids.length;
   } else {
     let acc = floor((100 / shotsFired) * asteroidsHit);
