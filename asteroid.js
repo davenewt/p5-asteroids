@@ -27,7 +27,9 @@ function Asteroid(pos, r, vel) {
     this.vel = 0.5;
   }
   this.vertices = random(8, 12);
+  this.poly = []; // generate a poly (array of points) for collision detection
   this.offset = [];
+
   for (let i = 0; i < this.vertices; i++) {
     this.offset[i] = random(this.r / 2);
   }
@@ -53,6 +55,7 @@ function Asteroid(pos, r, vel) {
       let x = r * cos(angle);
       let y = r * sin(angle);
       vertex(x, y);
+      this.poly[i] = createVector(this.pos.x + x, this.pos.y + y);
     }
     endShape(CLOSE);
     pop();

@@ -1,3 +1,5 @@
+// TODO: collide2D detection between ship and asteroids.
+
 let ship;
 let asteroids = [];
 let asteroidMaxSize;
@@ -16,6 +18,7 @@ function preload() {
 }
 
 function setup() {
+  collideDebug(true);
   createCanvas(windowWidth, windowHeight);
   asteroidMaxSize = 60;
   scorePos = createVector(10, 30);
@@ -36,6 +39,7 @@ function resetGame() {
 }
 
 function draw() {
+  // frameRate(15);
   background(0);
 
   for (let i = lasers.length - 1; i >= 0; i--) {
@@ -49,7 +53,7 @@ function draw() {
         lasers[i].update()
       }
       for (let j = asteroids.length - 1; j >= 0; j--) {
-        if (lasers[i].hits(asteroids[j])) {
+        if (lasers[i].collides(asteroids[j])) {
           if (!gameOver) {
             score = score + floor(asteroids[j].r);
             asteroidsHit++;
@@ -60,7 +64,6 @@ function draw() {
           }
           asteroids.splice(j, 1);
           lasers.splice(i, 1);
-
           break;
         }
       }
