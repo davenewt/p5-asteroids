@@ -1,7 +1,12 @@
 function Ship() {
   this.r = 20;
+  this.poly = [];
+  this.poly[0] = createVector(-this.r, this.r);
+  this.poly[1] = createVector(this.r, this.r);
+  this.poly[2] = createVector(0, -this.r);
   this.pos = createVector(width / 2, height / 3);
   this.heading = 0;
+  this.headingV = p5.Vector.fromAngle(radians(this.heading));
   this.targetHeading = 0;
   this.vel = createVector(0, 0);
   this.maxSpeed = 10;
@@ -9,6 +14,7 @@ function Ship() {
   this.update = function() {
     if (this.heading != this.targetHeading) {
       this.heading = lerp(this.heading, this.targetHeading, 0.1);
+      this.headingV = p5.Vector.fromAngle(radians(this.heading));
     }
 
     if (keyIsDown(39)) { // right arrow
@@ -57,12 +63,27 @@ function Ship() {
   }
 
   this.render = function() {
+
+    // Create the vertices of the ship's polygon, assuming 0,0 centre
+    this.poly[0] = createVector(-this.r, this.r);
+    this.poly[1] = createVector(this.r, this.r);
+    this.poly[2] = createVector(0, -this.r);
+    // now rotate each point about 0,0, then add the ship's position
+    for (let i = 0; i < this.poly.length; i++) {
+      this.poly[i] = this.poly[i].rotate(this.heading + PI / 2);
+      this.poly[i].add(this.pos);
+    }
+    // We can now draw the ship at its correct location
+    // based on 0,0 and no rotation because we've already accounted for that!
     push();
-    translate(this.pos.x, this.pos.y);
-    rotate(this.heading + PI / 2);
     fill(200);
     noStroke();
-    triangle(-this.r, this.r, this.r, this.r, 0, -this.r);
+    beginShape();
+    vertex(this.poly[0].x, this.poly[0].y);
+    vertex(this.poly[1].x, this.poly[1].y);
+    vertex(this.poly[2].x, this.poly[2].y);
+    endShape(CLOSE);
+
     pop();
   }
 
@@ -83,13 +104,8 @@ function Ship() {
     pop();
   }
 
-  this.hits = function(asteroid) {
-    let d = dist(this.pos.x, this.pos.y, asteroid.pos.x, asteroid.pos.y);
-    if (d < this.r + asteroid.r) {
-      return true;
-    } else {
-      return false;
-    }
+  this.collides = function(asteroid) {
+    return (collidePolyPoly(this.poly, asteroid.poly));
   }
 
 }

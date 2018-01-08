@@ -10,6 +10,9 @@ let gameOver;
 let gameRunning;
 let shotsFired;
 let asteroidsHit;
+let scrollTextX;
+let scrollText;
+let scrollSpeed;
 
 function preload() {
   boldFont = loadFont('fonts/pixelmix/pixelmix_bold.ttf');
@@ -24,6 +27,10 @@ function setup() {
   scorePos = createVector(10, 30);
   ship = new Ship();
   resetGame();
+  scrollTextX = width;
+  scrollText = "This is quite a long message. There are many like it but this one is mine.";
+  scrollText = scrollText.toUpperCase();
+  scrollSpeed = 2;
 }
 
 function resetGame() {
@@ -41,6 +48,8 @@ function resetGame() {
 function draw() {
   // frameRate(15);
   background(0);
+
+
 
   for (let i = lasers.length - 1; i >= 0; i--) {
     if (lasers[i].pos.x < 0 || lasers[i].pos.x > width || lasers[i].pos.y < 0 || lasers[i].pos.y > height) {
@@ -74,7 +83,7 @@ function draw() {
     gameOver = true;
   } else {
     for (let j = asteroids.length - 1; j >= 0; j--) {
-      if (ship.hits(asteroids[j])) {
+      if (ship.collides(asteroids[j])) {
         gameOver = true;
       }
       asteroids[j].render();
@@ -91,6 +100,21 @@ function draw() {
 
   showScore();
   showText();
+
+  // Show some scrolling text at bottom of screen
+  // push();
+  // translate(0, 0);
+  // noStroke();
+  // fill(0, 200, 0);
+  // textFont(boldFont);
+  // textSize(18);
+  // let tw = textWidth(scrollText);
+  // text(scrollText, scrollTextX, height - 50);
+  // pop();
+  // scrollTextX = scrollTextX - scrollSpeed;
+  // if (scrollTextX < -tw) {
+  //   scrollTextX = width;
+  // }
 
 }
 
@@ -141,17 +165,11 @@ function showScore() {
     fill(20, 20, 20);
   }
   rect(5, 5, width - scorePos.x, scorePos.y + 5);
-  //
-  // stroke(255, 255, 255, 0.2);
-  // strokeWeight(2);
-  // line(scorePos.x, scorePos.y + 5, width - scorePos.x, scorePos.y + 5);
-  //
   fill(200, 200, 200);
   textFont(normalFont);
   textSize(12);
   text(scoreText, scorePos.x, scorePos.y);
   pop();
-// console.log("Score shown");
 }
 
 function showText() {

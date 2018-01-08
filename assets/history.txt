@@ -1,2 +1,5 @@
+v4.3, 8 Jan 2018:
+* Applied p5.collide2D to the ship, for more accurate collision detection.
+
 v4.2, 6 Jan 2018:
 * Added p5.collide2D library and implemented collision between ship lasers and asteroids.
