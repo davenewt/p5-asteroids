@@ -1,4 +1,4 @@
-ASTEROIDS! (v4.4)
+ASTEROIDS! (v4.5)
 >> Press any key to play (P to pause) <<
 GAME OVER
 >> Press R to restart <<

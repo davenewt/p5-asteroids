@@ -11,9 +11,10 @@ function Ship() {
   this.targetHeading = 0;
   this.vel = createVector(0, 0);
   this.maxSpeed = 10;
-  // this.collided = false;
   this.currentColour = color(220, 220, 220);
   this.intendedColour = this.currentColour;
+  this.colourSteps = [];
+  this.currentColourStep = 0;
 
   this.update = function() {
     if (this.heading != this.targetHeading) {
@@ -50,9 +51,30 @@ function Ship() {
       this.pos.y = -this.r;
     }
 
-    if (this.currentColour != this.intendedColour) {
-      this.currentColour = lerpColor(this.currentColour, this.intendedColour, 0.02);
+    if (this.currentColour == this.intendedColour) {
+      // do nothing
+    } else {
+      // change its colour
+      this.changeColour(this.currentColourStep);
+      this.currentColourStep++;
     }
+  }
+
+  this.setColour = function(newColour) {
+    this.intendedColour = newColour;
+    s = 30;
+    // console.log("Set new colour to " + this.intendedColour + " in " + s + " steps.");
+    this.colourSteps = [];
+    for (i = 0; i < s; i++) {
+      this.colourSteps[i] = lerpColor(this.currentColour, this.intendedColour, (1 / s) * i);
+    }
+    this.colourSteps.push(newColour);
+    this.currentColourStep = 0;
+  }
+
+  this.changeColour = function(step) {
+    // console.log("Changing colour to " + this.colourSteps[step]);
+    this.currentColour = this.colourSteps[step];
   }
 
   this.boost = function() {
@@ -86,7 +108,7 @@ function Ship() {
     // We can now draw the ship at its correct location
     // based on 0,0 and no rotation because we've already accounted for that!
     push();
-    fill(this.currentColor);
+    fill(this.currentColour);
     noStroke();
     // stroke(255);
     beginShape();

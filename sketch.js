@@ -1,5 +1,3 @@
-// TODO: Figure out why collide2D detection between ship and asteroids isn't perfect!
-
 let ship;
 let asteroids = [];
 let asteroidMaxSize;
@@ -84,7 +82,8 @@ function draw() {
       // console.log(ship.collides(asteroids[j]));
       if (ship.collides(asteroids[j])) {
         gameOver = true;
-        ship.currentColour = color(200, 0, 0);
+        ship.currentColour = color(255, 0, 0);
+        ship.setColour(color(200, 200, 200));
       }
       asteroids[j].render();
       if (gameRunning) {

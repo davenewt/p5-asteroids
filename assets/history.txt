@@ -1,3 +1,6 @@
+v4.5, 9 Jan 2018:
+* Fixed bug in colour-changing for ship.
+
 v4.4, 9 Jan 2018:
 * Fixed bug in collision detection between ship and asteroids (asteroid polys were being calculated/rotated incorrectly)
 * Switched to a minified version of p5.collide2D
