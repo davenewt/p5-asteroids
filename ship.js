@@ -4,12 +4,16 @@ function Ship() {
   this.poly[0] = createVector(-this.r, this.r);
   this.poly[1] = createVector(this.r, this.r);
   this.poly[2] = createVector(0, -this.r);
+  this.poly[3] = createVector(-this.r, this.r);
   this.pos = createVector(width / 2, height / 3);
   this.heading = 0;
   this.headingV = p5.Vector.fromAngle(radians(this.heading));
   this.targetHeading = 0;
   this.vel = createVector(0, 0);
   this.maxSpeed = 10;
+  // this.collided = false;
+  this.currentColour = color(220, 220, 220);
+  this.intendedColour = this.currentColour;
 
   this.update = function() {
     if (this.heading != this.targetHeading) {
@@ -45,6 +49,10 @@ function Ship() {
     if (this.pos.y > height + this.r) {
       this.pos.y = -this.r;
     }
+
+    if (this.currentColour != this.intendedColour) {
+      this.currentColour = lerpColor(this.currentColour, this.intendedColour, 0.02);
+    }
   }
 
   this.boost = function() {
@@ -68,22 +76,24 @@ function Ship() {
     this.poly[0] = createVector(-this.r, this.r);
     this.poly[1] = createVector(this.r, this.r);
     this.poly[2] = createVector(0, -this.r);
+    this.poly[3] = createVector(-this.r, this.r);
     // now rotate each point about 0,0, then add the ship's position
     for (let i = 0; i < this.poly.length; i++) {
       this.poly[i] = this.poly[i].rotate(this.heading + PI / 2);
       this.poly[i].add(this.pos);
     }
+
     // We can now draw the ship at its correct location
     // based on 0,0 and no rotation because we've already accounted for that!
     push();
-    fill(200);
+    fill(this.currentColor);
     noStroke();
+    // stroke(255);
     beginShape();
     vertex(this.poly[0].x, this.poly[0].y);
     vertex(this.poly[1].x, this.poly[1].y);
     vertex(this.poly[2].x, this.poly[2].y);
     endShape(CLOSE);
-
     pop();
   }
 

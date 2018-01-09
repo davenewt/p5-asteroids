@@ -1,4 +1,4 @@
-// TODO: collide2D detection between ship and asteroids.
+// TODO: Figure out why collide2D detection between ship and asteroids isn't perfect!
 
 let ship;
 let asteroids = [];
@@ -46,10 +46,8 @@ function resetGame() {
 }
 
 function draw() {
-  // frameRate(15);
+  // frameRate(4);
   background(0);
-
-
 
   for (let i = lasers.length - 1; i >= 0; i--) {
     if (lasers[i].pos.x < 0 || lasers[i].pos.x > width || lasers[i].pos.y < 0 || lasers[i].pos.y > height) {
@@ -83,8 +81,10 @@ function draw() {
     gameOver = true;
   } else {
     for (let j = asteroids.length - 1; j >= 0; j--) {
+      // console.log(ship.collides(asteroids[j]));
       if (ship.collides(asteroids[j])) {
         gameOver = true;
+        ship.currentColour = color(200, 0, 0);
       }
       asteroids[j].render();
       if (gameRunning) {

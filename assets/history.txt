@@ -1,3 +1,8 @@
+v4.4, 9 Jan 2018:
+* Fixed bug in collision detection between ship and asteroids (asteroid polys were being calculated/rotated incorrectly)
+* Switched to a minified version of p5.collide2D
+* Added visual cue to ship colliding with asteroid (fills red and gradually returns to white when no longer colliding)
+
 v4.3, 8 Jan 2018:
 * Applied p5.collide2D to the ship, for more accurate collision detection.
 
